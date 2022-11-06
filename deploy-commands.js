@@ -7,9 +7,11 @@ const commands = [];
 const commandsPath = path.join(__dirname, 'commands');
 const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 
+console.log("Finding files...")
 for (const file of commandFiles) {
 	const filePath = path.join(commandsPath, file);
 	const command = require(filePath);
+	console.log(command.data.name);
 	commands.push(command.data.toJSON());
 }
 
@@ -29,7 +31,3 @@ const rest = new REST({ version: '10' }).setToken(token);
 		console.error(error);
 	}
 })();
-
-// rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: commands })
-// 	.then((data) => console.log(`Successfully registered ${data.length} application commands to Haven (curent guild).`))
-// 	.catch(console.error);
