@@ -31,7 +31,11 @@ client.on('interactionCreate', async interaction => {
 		await command.execute(interaction);
 	} catch (error) {
 		console.error(error);
-		await interaction.reply({ content: `@<${ownerId}> There was an error while executing this command!`});
+		// console.log("is interaction deferred? " + interaction.deferred);
+		if(interaction.deferred){
+			await interaction.followUp({content: `<@${ownerId}> There was an error while executing this command!`});
+		}
+		await interaction.reply({ content: `<@${ownerId}> There was an error while executing this command!`});
 	}
 });
 
