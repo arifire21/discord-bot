@@ -11,9 +11,7 @@ const exampleEmbed = new EmbedBuilder()
 		{ name: 'Portrayed by', value: 'API_Value' },
 	)
 	.setImage('https://i.imgur.com/AfFp7pu.png')
-	// .setFooter({ text: 'Bot by deltaflare#6222', iconURL: global.ownerAvatar});
-	.setFooter({ text: 'Bot by deltaflare#6222', iconURL: 'https://discord.js.org/'});
-
+	.setFooter({ text: 'Bot by deltaflare#6222', iconURL: global.ownerAvatar});
 
 module.exports = {
 	data: new SlashCommandBuilder()
