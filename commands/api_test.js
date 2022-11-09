@@ -45,6 +45,7 @@ function getCharacterPage(userString) {
 
         url = url + "?origin=*";
         Object.keys(params).forEach(function (key) { url += "&" + key + "=" + params[key]; });
+        console.log("QUERY STRING USED: " + url)
         
         axios.get(url)
             .then(function (response) {
