@@ -26,8 +26,7 @@ module.exports = {
         console.log("submitted: " + interaction.options.getString('character'))
         var resulturl = await getCharacterPage(interaction.options.getString('character'))
         console.log("result: " + resulturl)
-        //todo, if name is empty "char not found"
-	    await interaction.editReply(resulturl || "Character not found! (check spelling)");
+	    await interaction.editReply(resulturl);
 	},
 };
 
@@ -38,6 +37,7 @@ function getCharacterPage(userString) {
         var params = {
             action: "query",
             format: "json",
+            formatversion: "2",
             titles: userString,
             prop: "info",
             inprop: "url"
@@ -50,16 +50,20 @@ function getCharacterPage(userString) {
             .then(function (response) {
                 var pages = response.data.query.pages;
                 for (var p in pages) {
-                    console.log("Page " + pages[p] + " response:");
-                    console.log(pages[p].canonicalurl);
-                    returnStr = pages[p].canonicalurl;
+                    console.log("Page " + p + " response:");
+                    console.log(pages[p]);
+                    if(pages[p].missing === true){
+                        console.log("char page is missing");
+                        returnStr = "Character not found! (page \"" + userString +"\" does not exist)";
+                    } else {
+                        returnStr = pages[p].canonicalurl;
+                    }
                     console.log("assigned: " + returnStr);
                     resolve(returnStr)
                 }
             })
             .catch(function (error) {
                 console.log(error);
-                returnStr = "CanonicalURL not found! (error logged)"
                 reject(returnStr)
             })
 
