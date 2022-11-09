@@ -26,7 +26,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('embed-test')
 		.setDescription('cool required description'),
-	execute(interaction) {
-		interaction.reply({embeds: [exampleEmbed]});
+	async execute(interaction) {
+		await interaction.reply({embeds: [exampleEmbed]});
 	},
 };
