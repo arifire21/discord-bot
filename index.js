@@ -46,3 +46,5 @@ client.once('ready', c => {
 
 // Login to Discord with your client's token
 client.login(token);
+
+module.exports.Client = client;
