@@ -24,7 +24,8 @@ const exampleEmbed = new EmbedBuilder()
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('embed-test'),
+		.setName('embed-test')
+		.setDescription('cool required description'),
 	execute(interaction) {
 		interaction.reply({embeds: [exampleEmbed]});
 	},
