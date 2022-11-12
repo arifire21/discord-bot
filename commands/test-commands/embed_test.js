@@ -1,10 +1,4 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { ownerId } = require('../../config.json');
-const index = require('../../index.js');
-const client = index.Client;
-
-const user = client.users.fetch(ownerId);
-console.log(user.avatarURL);
 
 const exampleEmbed = new EmbedBuilder()
 	.setColor(0xFF8000)
@@ -12,21 +6,19 @@ const exampleEmbed = new EmbedBuilder()
 	.setURL('https://discord.js.org/')
 	.setAuthor({ name: 'Rekindled Embers Wiki', url: 'https://rekindled-embers.fandom.com' })
 	.setDescription('Some description here')
-	.setThumbnail('https://rekindled-embers.fandom.com/wiki/Special:NewFiles?file=wiki.png')
+	.setThumbnail('https://static.wikia.nocookie.net/ucp-internal-test-starter-commons/images/b/bc/Wiki.png/revision/latest?cb=20220106192145')
 	.addFields(
-		{ name: 'Regular field title', value: 'Some value here' },
-		{ name: '\u200B', value: '\u200B' },
-		{ name: 'Inline field title', value: 'Some value here', inline: true },
+		{ name: 'Portrayed by', value: 'API_Value' },
 	)
-	.addFields({ name: 'Inline field title', value: 'Some value here', inline: true })
 	.setImage('https://i.imgur.com/AfFp7pu.png')
-	.setFooter({ text: 'Bot by deltaflare#6222' , iconURL: user.avatarURL});
+	.setFooter({ text: 'Bot by deltaflare#6222', iconURL: global.ownerAvatar});
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('embed-test')
 		.setDescription('cool required description'),
-	async execute(interaction) {
-		await interaction.reply({embeds: [exampleEmbed]});
+	execute(interaction) {
+		console.log(global.ownerAvatar);
+		interaction.reply({embeds: [exampleEmbed]});
 	},
 };

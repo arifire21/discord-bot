@@ -8,7 +8,7 @@ const { token, ownerId } = require('./config.json');
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 client.commands = new Collection();
 
-const commandsPath = path.join(__dirname, 'commands');
+const commandsPath = path.join(__dirname, 'commands/test-commands');
 const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {
@@ -47,4 +47,19 @@ client.once('ready', c => {
 // Login to Discord with your client's token
 client.login(token);
 
-module.exports.Client = client;
+//get owner info to use in other cmds
+client.users.fetch(ownerId).then(ownerData => {
+	console.log("fetching owner info...");
+	global.ownerAvatar = ownerData.displayAvatarURL();
+	// console.log(ownerData.displayAvatarURL());
+	console.log("owner avatar url found")
+});
+
+// thanos.then(function(result1) {
+//     //put your code that uses the result1 (the user object) here
+//     //for example, you could do var imgURL = result1.displayAvatarURL();
+// });
+// console.log("fetched owner info");
+// console.log(owner)
+// global.ownerAvatar = owner.displayAvatarURL;
+// console.log("global avatar url set: " + ownerAvatar);
