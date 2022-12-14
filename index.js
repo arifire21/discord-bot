@@ -8,7 +8,8 @@ const { token, ownerId } = require('./config.json');
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 client.commands = new Collection();
 
-const commandsPath = path.join(__dirname, 'commands/test-commands');
+const commandsPath = path.join(__dirname, 'commands');
+console.log("HANDLER USING PATH: " + commandsPath);
 const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {

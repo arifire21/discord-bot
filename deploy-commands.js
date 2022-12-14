@@ -4,6 +4,7 @@ const { REST, Routes } = require('discord.js');
 const { clientId, guildId, token } = require('./config.json');
 
 const commands = [];
+//REMEMBER TO CHANGE THE HANDLER PATH IN INDEX
 const commandsPath = path.join(__dirname, 'commands');
 const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 

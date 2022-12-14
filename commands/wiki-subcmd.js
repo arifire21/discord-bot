@@ -23,7 +23,7 @@ module.exports = {
             subcommand
 			.setName('character')
 			.setDescription('Info about a character')
-			.addStringOption(option => option.setName('character_name').setDescription('Name of character, with spaces').setRequired(true))
+			.addStringOption(option => option.setName('name').setDescription('Name of character, with spaces (case sensitive)').setRequired(true))
         )
         .addSubcommand(subcommand =>
             subcommand
@@ -37,11 +37,11 @@ module.exports = {
         await wait(2000);
         if (interaction.options.getSubcommand() === 'character') {
             console.log("char page called")
-            const charName = interaction.options.getString('character_name');
-            var resultStr = await getCharacterPage(charName);
+            const charName = interaction.options.getString('name');
+            var returnStr = await getCharacterPage(charName);
 
-            if(resultStr == "" || resultStr.includes("Character")){
-                await interaction.editReply(resultStr);
+            if(returnStr.includes("Character")){
+                await interaction.editReply(returnStr);
             } else {
                 await interaction.editReply({embeds: [baseEmbed]});
             }
@@ -84,13 +84,15 @@ function getCharacterPage(userString) {
                     console.log(pages[p]);
                     if(pages[p].missing === true){
                         console.log("char page is missing");
-                        returnStr = "Character not found! (page \"" + userString +"\" does not exist)";
+                        returnStr = "Character not found! (page \"" + userString +"\" does not exist)\n(The option is *case sensitive*)";
                     } else {
                         baseEmbed.setTitle(userString);
                         baseEmbed.setURL(pages[p].canonicalurl);
                         // baseEmbed.setDescription(pages[p].description);
                         var filepath = pages[p].images[0].title;
-                        filepath = filepath.replace("File:", "")
+                        filepath = filepath.replace("File:", "");
+                        filepath = filepath.replace(" ", "+");
+                        console.log(filepath); console.log("https://rekindled-embers.fandom.com/wiki/Rekindled_Embers_Wiki?file=" + filepath)
                         baseEmbed.setImage("https://rekindled-embers.fandom.com/wiki/Rekindled_Embers_Wiki?file=" + filepath);
                     }
                     console.log("returnstr before resolve: " + returnStr);
