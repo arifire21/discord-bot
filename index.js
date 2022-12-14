@@ -33,9 +33,9 @@ client.on('interactionCreate', async interaction => {
 		console.error(error);
 		// console.log("is interaction deferred? " + interaction.deferred);
 		if(interaction.deferred){
-			await interaction.followUp({content: `<@${ownerId}> There was an error while executing this command!`});
+			await interaction.followUp({content: `<@${ownerId}> There was an error while executing this command!\n` + error});
 		}
-		await interaction.reply({ content: `<@${ownerId}> There was an error while executing this command!`});
+		await interaction.reply({ content: `<@${ownerId}> There was an error while executing this command!\n` + error});
 	}
 });
 
@@ -54,12 +54,3 @@ client.users.fetch(ownerId).then(ownerData => {
 	// console.log(ownerData.displayAvatarURL());
 	console.log("owner avatar url found")
 });
-
-// thanos.then(function(result1) {
-//     //put your code that uses the result1 (the user object) here
-//     //for example, you could do var imgURL = result1.displayAvatarURL();
-// });
-// console.log("fetched owner info");
-// console.log(owner)
-// global.ownerAvatar = owner.displayAvatarURL;
-// console.log("global avatar url set: " + ownerAvatar);

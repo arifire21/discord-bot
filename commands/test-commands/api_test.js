@@ -39,7 +39,7 @@ function getCharacterPage(userString) {
             format: "json",
             formatversion: "2",
             titles: userString,
-            prop: "info",
+            prop: "images|description|info",
             inprop: "url"
         };
 
