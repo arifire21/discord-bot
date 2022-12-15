@@ -1,8 +1,9 @@
-// Require the necessary discord.js classes
 const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
 const { token, ownerId } = require('./config.json');
+const { ownerUsername, ownerTag, ownerAvatar } = require('./owner-details.json');
+const { writeFile, readFile } = require('fs');
 
 // Create a new client instance
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
@@ -43,15 +44,47 @@ client.on('interactionCreate', async interaction => {
 // When the client is ready, run this code (only once)
 client.once('ready', c => {
 	console.log(`Ready! Logged in as ${c.user.tag}`);
+
+	//get owner info to use in other cmds
+	var tempAvatar; var tempUsername; var tempTag;
+	client.users.fetch(ownerId).then(ownerData => {
+		tempAvatar = ownerData.displayAvatarURL();
+		tempUsername = ownerData.username;
+		tempTag = ownerData.tag;
+		console.log(tempAvatar + '\n' + tempUsername + '\n' + tempTag)
+		console.log("comparing owner info...");
+		readFile('./owner-details.json', (error, data) => {
+			if (error) {
+				console.log("read error" + error);
+				return;
+			}
+			const parsedData = JSON.parse(data);
+
+			// var avatarstr = ownerData.displayAvatarURL()
+			// if (!tempAvatar.equals(ownerAvatar)) {
+			// 	parsedData.ownerAvatar = tempAvatar;
+			// 	console.log("owneravatar different, changed")
+			// }
+			// if (!tempUsername.equals(ownerUsername)) {
+			// 	parsedData.ownerUsername = tempUsername;
+			// 	console.log("ownerUN different, changed")
+			// }
+			// if (!tempTag.equals(ownerTag)) {
+			// 	parsedData.ownerTag = tempTag;
+			// 	console.log("ownertag different, changed")
+			// }
+			console.log("data compared!")
+
+			writeFile('./owner-details.json', JSON.stringify(parsedData, null, 2), (err) => {
+				if (err) {
+					console.log('Failed to write updated data to file');
+					return;
+				}
+				console.log('Updated file successfully');
+			});
+		});
+	});
 });
 
 // Login to Discord with your client's token
 client.login(token);
-
-//get owner info to use in other cmds
-client.users.fetch(ownerId).then(ownerData => {
-	console.log("fetching owner info...");
-	global.ownerAvatar = ownerData.displayAvatarURL();
-	// console.log(ownerData.displayAvatarURL());
-	console.log("owner avatar url found")
-});

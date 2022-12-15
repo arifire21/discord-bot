@@ -1,19 +1,18 @@
 const axios = require('axios');
 const wait = require('node:timers/promises').setTimeout;
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const fs = require('node:fs');
+const { ownerUsername, ownerTag, ownerAvatar } = require('./../owner-details.json');
 
 const baseEmbed = new EmbedBuilder()
 	.setColor(0xFF8000)
-	// .setTitle('Character Name')
-	// .setURL('https://discord.js.org/')
 	.setAuthor({ name: 'Rekindled Embers Wiki', url: 'https://rekindled-embers.fandom.com' })
 	// .setDescription('Some description here')
 	.setThumbnail('https://static.wikia.nocookie.net/ucp-internal-test-starter-commons/images/b/bc/Wiki.png/revision/latest?cb=20220106192145')
 	// .addFields(
 	// 	{ name: 'Portrayed by', value: 'API_Value' },
 	// )
-	// .setImage('https://i.imgur.com/AfFp7pu.png')
-	.setFooter({ text: 'Bot by deltaflare#6222', iconURL: global.ownerAvatar});
+	.setFooter({ text: 'Bot by '+ownerTag, iconURL: ownerAvatar});
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -89,22 +88,24 @@ function getCharacterPage(userString) {
                         baseEmbed.setTitle(userString);
                         baseEmbed.setURL(pages[p].canonicalurl);
                         // baseEmbed.setDescription(pages[p].description);
-                        var filepath = pages[p].images[0].title;
-                        filepath = filepath.replace("File:", "");
-                        filepath = filepath.replace(" ", "+");
-                        console.log(filepath); console.log("https://rekindled-embers.fandom.com/wiki/Rekindled_Embers_Wiki?file=" + filepath)
-                        baseEmbed.setImage("https://rekindled-embers.fandom.com/wiki/Rekindled_Embers_Wiki?file=" + filepath);
+                        try {
+                            var filepath = pages[p].images[0].title;
+                            filepath = filepath.replace("File:", "");
+                            filepath = filepath.replace(" ", "_");
+                            console.log(filepath); console.log("https://rekindled-embers.fandom.com/wiki/Special:FilePath/" + filepath)
+                            baseEmbed.setImage("https://rekindled-embers.fandom.com/wiki/Special:FilePath/" + filepath);
+                        } catch (error) {
+                            console.log("no images on page");
+                        }
                     }
-                    console.log("returnstr before resolve: " + returnStr);
+                    // console.log("returnstr before resolve: " + returnStr);
                     resolve(returnStr)
                 }
             })
             .catch(function (error) {
-                console.log(error);
+                // console.log(error);
                 reject(returnStr)
             })
 
     })
 }
-
-//https://rekindled-embers.fandom.com/wiki/Rekindled_Embers_Wiki?file=Smoky_Flare.png
