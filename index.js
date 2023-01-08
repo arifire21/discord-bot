@@ -46,13 +46,14 @@ client.once('ready', c => {
 	console.log(`Ready! Logged in as ${c.user.tag}`);
 
 	//get owner info to use in other cmds
-	var tempAvatar; var tempUsername; var tempTag;
+	var tempAvatar; var tempUsername; var tempTag; var changed = false;
 	client.users.fetch(ownerId).then(ownerData => {
+		console.log("fetching owner info...\n");
 		tempAvatar = ownerData.displayAvatarURL();
 		tempUsername = ownerData.username;
 		tempTag = ownerData.tag;
-		console.log(tempAvatar + '\n' + tempUsername + '\n' + tempTag)
-		console.log("comparing owner info...");
+		console.log(tempAvatar + '\n' + tempUsername + '\n' + tempTag +'\n')
+		console.log("comparing owner info...\n");
 		readFile('./owner-details.json', (error, data) => {
 			if (error) {
 				console.log("read error" + error);
@@ -60,28 +61,40 @@ client.once('ready', c => {
 			}
 			const parsedData = JSON.parse(data);
 
-			// var avatarstr = ownerData.displayAvatarURL()
+		// if (!tempAvatar.equals(ownerAvatar)) {
+			if (!(tempAvatar===ownerAvatar)) {
+				console.log("ownerAvatar different:\nold: " + ownerAvatar + "\nnew: " + tempAvatar)
+				parsedData.ownerAvatar = tempAvatar;
+				changed = true;
+				console.log("changed to" + parsedData.ownerAvatar + "\n")
+			}
 			// if (!tempAvatar.equals(ownerAvatar)) {
-			// 	parsedData.ownerAvatar = tempAvatar;
-			// 	console.log("owneravatar different, changed")
-			// }
-			// if (!tempUsername.equals(ownerUsername)) {
-			// 	parsedData.ownerUsername = tempUsername;
-			// 	console.log("ownerUN different, changed")
-			// }
-			// if (!tempTag.equals(ownerTag)) {
-			// 	parsedData.ownerTag = tempTag;
-			// 	console.log("ownertag different, changed")
-			// }
+			if (!(tempUsername===ownerUsername)) {
+				console.log("ownerUN different:\nold: " + ownerUsername + "\nnew: " + tempUsername)
+				parsedData.ownerUsername = tempUsername;
+				changed = true;
+				console.log("changed to" + parsedData.ownerUsername + "\n")
+			}
+		// if (!tempAvatar.equals(ownerAvatar)) {
+			if (!(tempTag===ownerTag)) {
+				console.log("ownerTag different:\nold: " + ownerTag + "\nnew: " + tempTag)
+				parsedData.ownerTag = tempTag;
+				changed = true;
+				console.log("changed to" + parsedData.ownerTag + "\n")
+			}
 			console.log("data compared!")
 
-			writeFile('./owner-details.json', JSON.stringify(parsedData, null, 2), (err) => {
-				if (err) {
-					console.log('Failed to write updated data to file');
-					return;
-				}
-				console.log('Updated file successfully');
-			});
+			if(changed){
+				writeFile('./owner-details.json', JSON.stringify(parsedData, null, 2), (err) => {
+					if (err) {
+						console.log('Failed to write updated data to file');
+						return;
+					}
+					console.log('Updated file successfully');
+				});
+			} else {
+				console.log("no changes to owner data.")
+			}
 		});
 	});
 });
