@@ -25,7 +25,7 @@ client.on('interactionCreate', async interaction => {
 	if (!interaction.isChatInputCommand()) return;
 
 	const command = interaction.client.commands.get(interaction.commandName);
-    console.log(`${interaction.user.tag} in #${interaction.channel.name} triggered ${interaction.commandName} interaction.`);
+    console.log(`${interaction.user.tag} in #${interaction.channel.name} (${interaction.guild.name}) triggered ${interaction.commandName} interaction.`);
 
 	if (!command) return;
 
@@ -33,17 +33,16 @@ client.on('interactionCreate', async interaction => {
 		await command.execute(interaction);
 	} catch (error) {
 		console.error(error);
-		// console.log("is interaction deferred? " + interaction.deferred);
 		if(interaction.deferred){
-			await interaction.followUp({content: `<@${ownerId}> There was an error while executing this command!\n` + error});
+			await interaction.followUp({content: `<@${ownerId}> There was an error while executing this command!\n${error}`});
 		}
-		await interaction.reply({ content: `<@${ownerId}> There was an error while executing this command!\n` + error});
+		await interaction.reply({ content: `<@${ownerId}> There was an error while executing this command!\n${error}`});
 	}
 });
 
 // When the client is ready, run this code (only once)
 client.once('ready', c => {
-	console.log(`Ready! Logged in as ${c.user.tag}`);
+	console.log(`Logged in as ${c.user.tag}`);
 
 	//get owner info to use in other cmds
 	var tempAvatar; var tempUsername; var tempTag; var changed = false;
@@ -62,26 +61,26 @@ client.once('ready', c => {
 			const parsedData = JSON.parse(data);
 
 		// if (!tempAvatar.equals(ownerAvatar)) {
-			if (!(tempAvatar===ownerAvatar)) {
+			if (!(tempAvatar === ownerAvatar)) {
 				console.log("ownerAvatar different:\nold: " + ownerAvatar + "\nnew: " + tempAvatar)
 				parsedData.ownerAvatar = tempAvatar;
 				changed = true;
-				console.log("changed to" + parsedData.ownerAvatar + "\n")
+				console.log("changed to " + parsedData.ownerAvatar + "\n")
 			}
 			// if (!tempAvatar.equals(ownerAvatar)) {
-			if (!(tempUsername===ownerUsername)) {
+			if (!(tempUsername === ownerUsername)) {
 				console.log("ownerUN different:\nold: " + ownerUsername + "\nnew: " + tempUsername)
 				parsedData.ownerUsername = tempUsername;
 				changed = true;
-				console.log("changed to" + parsedData.ownerUsername + "\n")
+				console.log("changed to " + parsedData.ownerUsername + "\n")
 			}
 		// if (!tempAvatar.equals(ownerAvatar)) {
-			if (!(tempTag===ownerTag)) {
-				console.log("ownerTag different:\nold: " + ownerTag + "\nnew: " + tempTag)
-				parsedData.ownerTag = tempTag;
-				changed = true;
-				console.log("changed to" + parsedData.ownerTag + "\n")
-			}
+			// if (!(tempTag === ownerTag)) {
+			// 	console.log("ownerTag different:\nold: " + ownerTag + "\nnew: " + tempTag)
+			// 	parsedData.ownerTag = tempTag;
+			// 	changed = true;
+			// 	console.log("changed to " + parsedData.ownerTag + "\n")
+			// }
 			console.log("data compared!")
 
 			if(changed){
@@ -94,6 +93,7 @@ client.once('ready', c => {
 				});
 			} else {
 				console.log("no changes to owner data.")
+				console.log('Ready!')
 			}
 		});
 	});
