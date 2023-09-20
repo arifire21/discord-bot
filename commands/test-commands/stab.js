@@ -10,6 +10,10 @@ module.exports = {
                 .setRequired(true)
         ),
 	async execute(interaction) {
-		await interaction.reply(`${interaction.user.username} stabbed ${interaction.options.getUser('target')}`);
+		if(interaction.option.getUser('target').id = '823666872943378504'){
+			await interaction.reply(`Ow! Please don't stab me!`)
+		} else {
+			await interaction.reply(`${interaction.user.username} stabbed ${interaction.options.getUser('target')}`);
+		}
 	},
 };

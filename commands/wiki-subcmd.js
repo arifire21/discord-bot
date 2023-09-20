@@ -1,17 +1,13 @@
 const axios = require('axios');
 const wait = require('node:timers/promises').setTimeout;
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, codeBlock } = require('discord.js');
 const fs = require('node:fs');
 const { ownerUsername, ownerTag, ownerAvatar } = require('./../owner-details.json');
 
 const baseEmbed = new EmbedBuilder()
 	.setColor(0xFF8000)
 	.setAuthor({ name: 'Rekindled Embers Wiki', url: 'https://rekindled-embers.fandom.com' })
-	// .setDescription('Some description here')
 	.setThumbnail('https://static.wikia.nocookie.net/ucp-internal-test-starter-commons/images/b/bc/Wiki.png/revision/latest?cb=20220106192145')
-	// .addFields(
-	// 	{ name: 'Portrayed by', value: 'API_Value' },
-	// )
 	.setFooter({ text: 'Bot by '+ownerTag, iconURL: ownerAvatar});
 
 module.exports = {
@@ -34,7 +30,7 @@ module.exports = {
             subcommand
 			.setName('other')
 			.setDescription('Search for a RE Wiki page')
-			.addStringOption(option => option.setName('page').setDescription('Title of page, with spaces (do not use for catagories)').setRequired(true))
+			.addStringOption(option => option.setName('page').setDescription('Title of page, with spaces (do not use for categories)').setRequired(true))
         ),
 
     async execute(interaction) {
@@ -90,7 +86,7 @@ function getCharacterPage(userString) {
             format: "json",
             formatversion: "2",
             titles: userString,
-            prop: "images|description|info",
+            prop: "images|description|info|categories",
             inprop: "url"
             // list: "embeddedin"
         };
@@ -105,29 +101,43 @@ function getCharacterPage(userString) {
                 for (var p in pages) {
                     console.log(`Page ${p} response:`);
                     console.log(pages[p]);
-                    if(pages[p].missing === true){
+                    if(pages[p].missing){
                         console.log("char page is missing");
                         returnStr = `Character not found! (page \"${userString}\" does not exist)\n(The option is *case sensitive*)`;
                     } else {
                         baseEmbed.setTitle(userString);
                         baseEmbed.setURL(pages[p].canonicalurl);
                         // baseEmbed.setDescription(pages[p].description);
+                        //get image
                         try {
                             var filepath = pages[p].images[0].title;
                             filepath = filepath.replace("File:", "");
-                            filepath = filepath.replace(" ", "_");
+                            filepath = filepath.replaceAll(" ", "_");
                             console.log(filepath); console.log("https://rekindled-embers.fandom.com/wiki/Special:FilePath/" + filepath)
                             baseEmbed.setImage("https://rekindled-embers.fandom.com/wiki/Special:FilePath/" + filepath);
                         } catch (error) {
-                            console.log("no images on page");
+                            console.log('char page has no image!\n' + error);
+                            baseEmbed.setImage(null)    //to replace image from previous commands, if possible
+                        }
+                        //get cats
+                        try {
+                            let returnedCats = categoryListHelper(pages[p].categories)
+                            baseEmbed.setFields({name: 'Categories', value: returnedCats})
+
+                            if(returnedCats.includes('Roleplay Characters')){
+                                baseEmbed.addFields({name: 'Portrayed By', value: 'TBD'})
+                            //if cat is not RP and the embed still has it
+                            } else if((!returnedCats.includes('Roleplay Characters')) && baseEmbed.fields[0].name === 'Portrayed By') {
+                                baseEmbed.spliceFields(-1, 1)
+                            }
+                        } catch (error) {
+                            console.log('char page has no categories!\n' + error);
                         }
                     }
-                    // console.log("returnstr before resolve: " + returnStr);
                     resolve(returnStr)
                 }
             })
             .catch(function (error) {
-                // console.log(error);
                 reject(returnStr)
             })
 
@@ -164,7 +174,7 @@ function getCategoryPage(userString) {
                     } else {
                         baseEmbed.setTitle(userString);
                         baseEmbed.setURL(`https://rekindled-embers.fandom.com/wiki/Category:${userString.replace(' ','_')}`);
-                        // baseEmbed.setDescription(pages[p].description);
+                        baseEmbed.setDescription(pages[p].description);
                     }
                     // console.log("returnstr before resolve: " + returnStr);
                     resolve(returnStr)
@@ -229,4 +239,18 @@ function getOtherPage(userString) {
             })
 
     })
+}
+
+function categoryListHelper(categories){
+    let slicedCategories = []
+
+    for (let i = 0; i < categories.length; i++) {
+        let t = categories[i].title
+        console.log('t: ' + t)
+        t = t.substring(9)   //removes 'category:' from the str
+        slicedCategories.push(t)
+    }
+
+    console.log('sliced: ' + slicedCategories)
+    return slicedCategories.join(',')
 }
