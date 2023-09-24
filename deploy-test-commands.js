@@ -25,6 +25,11 @@ const rest = new REST({ version: '10' }).setToken(token);
 
 (async () => {
 	try {
+		//for use when dev commands need to be cleared, removes confusion
+		// rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: [] })
+		// .then(() => console.log('Successfully deleted all guild commands.'))
+		// .catch(console.error);
+
 		console.log(`Started refreshing ${commands.length} application (/) commands.`);
 
 		const data = await rest.put(
@@ -32,7 +37,7 @@ const rest = new REST({ version: '10' }).setToken(token);
 			{ body: commands },
 		);
 
-		console.log(`\nSuccessfully reloaded ${data.length} TEST commands.\nCHANGE THE COMMAND PATH IN THE INDEX FILE\n`);
+		console.log(`\nSuccessfully reloaded ${data.length} TEST commands to Dev Server.`);
 	} catch (error) {
 		console.error(error);
 	}

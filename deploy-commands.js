@@ -25,12 +25,14 @@ const rest = new REST({ version: '10' }).setToken(token);
 
 (async () => {
 	try {
+		rest.put(Routes.applicationCommands(clientId), { body: [] })
+		.then(() => console.log('[GLOBAL] Successfully deleted all application commands.'))
+		.catch(console.error);
+
 		console.log(`[GLOBAL] Started refreshing ${commands.length} application (/) commands.`);
 
 		const data = await rest.put(
-			Routes.applicationCommands(clientId),
-			{ body: commands },
-		);
+			Routes.applicationCommands(clientId),{ body: commands },);
 
 		console.log(`[GLOBAL] Successfully reloaded ${data.length} application (/) commands.`);
 	} catch (error) {

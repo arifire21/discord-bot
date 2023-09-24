@@ -1,8 +1,9 @@
+//KEEP THIS CMD AROUND TO TEST CLEANUP
 const axios = require('axios');
 const wait = require('node:timers/promises').setTimeout;
 const { SlashCommandBuilder, EmbedBuilder, codeBlock } = require('discord.js');
 const fs = require('node:fs');
-const { ownerUsername, ownerTag, ownerAvatar } = require('../owner-details.json');
+const { ownerUsername, ownerTag, ownerAvatar } = require('../../owner-details.json');
 
 const baseEmbed = new EmbedBuilder()
 	.setColor(0xFF8000)
@@ -38,7 +39,7 @@ module.exports = {
 
     async execute(interaction) {
         const privacy = interaction.options.getBoolean('private');
-        
+
         if (interaction.options.getSubcommand() === 'character') {
             console.log("char page called")
             const charName = interaction.options.getString('name');
