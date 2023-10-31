@@ -10,10 +10,12 @@ module.exports = {
                 .setRequired(true)
         ),
 	async execute(interaction) {
-		if(interaction.option.getUser('target').id = '823666872943378504'){
+		const target = interaction.options.getUser('target')
+
+		if(target.id == '823666872943378504'){
 			await interaction.reply(`Ow! Please don't stab me!`)
 		} else {
-			await interaction.reply(`${interaction.user.username} stabbed ${interaction.options.getUser('target')}`);
+			await interaction.reply(`${interaction.user.username} stabbed ${target}`);
 		}
 	},
 };

@@ -1,7 +1,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { REST, Routes } = require('discord.js');
-const { clientId, guildId, token } = require('./config.json');
+const { clientId, guildId, devGuildId, token } = require('./config.json');
 
 const commands = [];
 //REMEMBER TO CHANGE THE HANDLER PATH IN INDEX
@@ -26,18 +26,18 @@ const rest = new REST({ version: '10' }).setToken(token);
 (async () => {
 	try {
 		//for use when dev commands need to be cleared, removes confusion
-		// rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: [] })
-		// .then(() => console.log('Successfully deleted all guild commands.'))
-		// .catch(console.error);
+		rest.put(Routes.applicationGuildCommands(clientId, devGuildId), { body: [] })
+		.then(() => console.log('Successfully deleted all guild commands.'))
+		.catch(console.error);
 
 		console.log(`Started refreshing ${commands.length} application (/) commands.`);
 
 		const data = await rest.put(
-			Routes.applicationGuildCommands(clientId, guildId),
+			Routes.applicationGuildCommands(clientId, devGuildId),
 			{ body: commands },
 		);
 
-		console.log(`\nSuccessfully reloaded ${data.length} TEST commands to Dev Server.`);
+		console.log(`\nSuccessfully reloaded ${data.length} TEST commands to Dev Server (Inanimae).`);
 	} catch (error) {
 		console.error(error);
 	}

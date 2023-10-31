@@ -25,10 +25,9 @@ client.on('interactionCreate', async interaction => {
 	if (!interaction.isChatInputCommand()) return;
 
 	const command = interaction.client.commands.get(interaction.commandName);
-
 	const currentDate = new Date().toLocaleString('en-US', { timeZone: 'America/New_York' });
 
-    console.log(`[${currentDate}] ${interaction.user.tag} in #${interaction.channel.name} (${interaction.guild.name}) triggered ${interaction.commandName} interaction.`);
+    console.log(`[${currentDate}] ${interaction.user.username} (${interaction.user.tag}) in #${interaction.channel.name} (${interaction.guild.name}) triggered ${interaction.commandName} interaction.`);
 
 	if (!command) return;
 
