@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder, inlineCode } = require('discord.js');
-const { ownerUsername, ownerTag, ownerAvatar } = require('../../owner-details.json');
+const { ownerUsername, ownerTag, ownerAvatar } = require('../owner-details.json');
 
 const footer = inlineCode(`Orientation blurb by Celestilune. PM with questions!`)
 

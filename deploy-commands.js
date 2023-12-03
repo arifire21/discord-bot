@@ -4,7 +4,6 @@ const { REST, Routes } = require('discord.js');
 const { clientId, guildId, token } = require('./config.json');
 
 const commands = [];
-//REMEMBER TO CHANGE THE HANDLER PATH IN INDEX
 const commandsPath = path.join(__dirname, 'commands');
 const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 
@@ -25,10 +24,6 @@ const rest = new REST({ version: '10' }).setToken(token);
 
 (async () => {
 	try {
-		rest.put(Routes.applicationCommands(clientId), { body: [] })
-		.then(() => console.log('[GLOBAL] Successfully deleted all application commands.'))
-		.catch(console.error);
-
 		console.log(`[GLOBAL] Started refreshing ${commands.length} application (/) commands.`);
 
 		const data = await rest.put(
