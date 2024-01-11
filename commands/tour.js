@@ -1,7 +1,8 @@
-const { SlashCommandBuilder, EmbedBuilder, inlineCode } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, quote } = require('discord.js');
 const { ownerUsername, ownerTag, ownerAvatar } = require('../owner-details.json');
 
-const footer = inlineCode(`Orientation blurb by Celestilune. PM with questions!`)
+//called that bc it get appended instead
+const header = 'Orientation blurb by Celestilune!\n' + quote(`Let me know if there's anything I can guide you to or have ideas you’d like to bounce off of someone! Or just want to blather and chat about RE. Cause I'm always down for that.`)
 
 const embed = new EmbedBuilder()
 	.setColor(0xFF8000)
@@ -9,9 +10,9 @@ const embed = new EmbedBuilder()
 	.setDescription(`Here's a tour of the important places!`)
 	.addFields(
 		{ name: 'Got questions?', value: 'Ask in <#879932496488316949>!' },
-		{ name: 'Got spoilery questions and discussion?', value: 'View <#886470193042300938> with the Inquisitor role from <#880923604601143316>!'},
+		{ name: 'Got spoiler reactions and questions?', value: 'View <#886470193042300938> with the Inquisitor role from <#880923604601143316>!'},
 		{ name: 'Wanna see art?', value: 'Check the pins in <#879933744792883250>!'},
-		{ name: 'Wanna read about some of the characters that have gotten mentioned?', value: '<#925470003006951434>, <#931176889236725770>, <#927213397899087872>, and <#925597931485143050> are home to the prequel roleplay, currently active but on its way to winding down in prep for 2.0, coming soon.' },
+		{ name: 'Wanna read about some of the characters that have gotten mentioned?', value: '<#1186739790117359699> is home to the archived prequel roleplay. The real cool stuff can be found in the 2.0 sequel roleplay in <#1128691283393777785>, <#1186881216557883504>, and <#961091459682033674>. Lot of great stories to be found in those threads, including what was happening with some of the characters in <#1051940347942547457>! If you want to make a character, feel free to check in with <@718862095797452880>, <@172450794166157312>, or <@738608958973149226>, and we can help you get on the right track!' },
 		{ name: 'Wanna chat?', value: '<#925597687926128680> is where we tend to blather if not <#878123375342522373>.'}
 	)
 	;
@@ -19,7 +20,7 @@ const embed = new EmbedBuilder()
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('tour')
-		.setDescription('test')
+		.setDescription('Welcome to the server!')
         .addUserOption(option => 
             option.setName('target')
                 .setDescription('Who are we welcoming?')
@@ -32,7 +33,7 @@ module.exports = {
 		if(target.id == '823666872943378504'){
 			await interaction.reply(`I don't need to be welcomed!`)
 		} else {
-            await interaction.reply({embeds: [embed], content: `Welcome to Angel’s Rest, ${target}!\n${footer}`})
+            await interaction.reply({embeds: [embed], content: `Welcome to Angel’s Rest, ${target}!\n${header}`})
 		}
 	},
 };
